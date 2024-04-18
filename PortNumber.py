@@ -31,29 +31,34 @@ def Add():
         print("Invalid option. Please enter 1, 2, 3, or 4")
 
 def Remove():
-    toRemove = int(input("What do you want to remove from the list?\n1: Port\n2: IP\n3: Username"))
+    toRemove = int(input("What do you want to remove from the list?\n1: Port\n2: IP\n3: Username\n4: Exit"))
     if toRemove == 1:
         portAdd = int(input("Enter Port number"))
         Ports.append(portAdd)
+        Remove()
     elif toRemove == 2:
         ipAdd = input("Enter IP Address")
         IPs.append(ipAdd)
+        Remove()
     elif toRemove == 3:
         usersAdd = input("Enter the user's name")
         Usernames.append(usersAdd)
+        Remove()
+    elif toRemove == 4:
+        Print()
     else:
         print("Invalid option. Please enter 1, 2, or 3.")
 
 loop = True
 while loop:
-    print("What do you want to do\n1: Add Port Number To Be Banned\n2: Unban Port Number")
+    print("What do you want to do\n1: Add to Access List\n2: Remove from Access List\n3: Check activity")
     num = input()
     if num == "1":
         Add()
     elif num == "2":
         Remove()
     elif num == "3":
-        loop = False
-        print("Exiting the program...")
+        #report()
+        print("Checking")
     else:
         print("Invalid option. Please enter 1, 2, or 3.")
