@@ -1,95 +1,92 @@
 Ports = []
 IPs = []
-Usernames = []
-AccessList = [Ports, IPs, Usernames]
+AccessList = [Ports, IPs]
+DeniedPorts = []
+DeniedIPs = []
+DeniedList = [DeniedPorts, DeniedIPs]
 
 def Print():
     print(f"Ports: {AccessList[0]}")
     print(f"IPs: {AccessList[1]}")
-    print(f"Users: {AccessList[2]}")
+    print(f"Denied Ports: {DeniedList[0]}")
+    print(f"Denied IPs: {DeniedList[1]}")
 
 def Add():
-    toAdd = int(input("What do you want to add to the list?\n1: Port\n2: IP\n3: Username\n4: Exit"))
+    toAdd = int(input("What do you want to add to the list?\n1: Port\n2: IP\n3: Exit"))
     if toAdd == 1:
-        portAdd = int(input("Enter Port number"))
+        portAdd = int(input("Enter Port number: "))
         Ports.append(portAdd)
         Add()
     elif toAdd == 2:
-        ipAdd = input("Enter IP Address")
+        ipAdd = input("Enter IP Address: ")
         IPs.append(ipAdd)
         Add()
     elif toAdd == 3:
-        usersAdd = input("Enter the user's name")
-        Usernames.append(usersAdd)
-        Add()
-    elif toAdd == 4:
         Print()
     else:
-        print("Invalid option. Please enter 1, 2, 3, or 4")
+        print("Invalid option. Please enter 1, 2, or 3")
 
-def Remove():
-    toRemove = int(input("What do you want to remove from the list?\n1: Port\n2: IP\n3: Username\n4: Exit"))
-    if toRemove == 1:
-        portAdd = int(input("Enter Port number"))
-        Ports.append(portAdd)
-        Remove()
-    elif toRemove == 2:
-        ipAdd = input("Enter IP Address")
-        IPs.append(ipAdd)
-        Remove()
-    elif toRemove == 3:
-        usersAdd = input("Enter the user's name")
-        Usernames.append(usersAdd)
-        Remove()
-    elif toRemove == 4:
+def Deny():
+    toDeny = int(input("What do you want to deny?\n1: Port\n2: IP\n3: Exit"))
+    if toDeny == 1:
+        portDeny = int(input("Enter Port number: "))
+        DeniedPorts.append(portDeny)
+        Deny()
+    elif toDeny == 2:
+        ipDeny = input("Enter IP Address: ")
+        DeniedIPs.append(ipDeny)
+        Deny()
+    elif toDeny == 3:
         Print()
     else:
-        print("Invalid option. Please enter 1, 2, or 3.")
+        print("Invalid option. Please enter 1, 2, or 3")
 
 def Save():
-    with open("acl.txt", "w") as file:
-        file.write("Ports:\n")
-        file.write('\n'.join(map(str, Ports)))
-        file.write("\n\nIPs:\n")
-        file.write('\n'.join(IPs))
-        file.write("\n\nUsernames:\n")
-        file.write('\n'.join(Usernames))
+    with open("acl.txt", "a") as file:
+        for port in Ports:
+            file.write(f"ufw allow {port}\n")
+        for ip in IPs:
+            file.write(f"ufw allow from {ip}\n")
+
+def SaveDenied():
+    with open("acl.txt", "a") as file:
+        for port in DeniedPorts:
+            file.write(f"ufw deny {port}\n")
+        for ip in DeniedIPs:
+            file.write(f"ufw deny from {ip}\n")
 
 def Load():
-    global Ports, IPs, Usernames
+    global Ports, IPs
     with open("acl.txt", "r") as file:
         lines = file.readlines()
         mode = None
-        for line in file:
+        for line in lines:
             line = line.strip()
             if line == "Ports:":
                 mode = "Ports"
             elif line == "IPs:":
                 mode = "IPs"
-            elif line == "Usernames:":
-                mode = "Usernames"
             elif mode == "Ports" and line:
                 Ports.append(int(line))
             elif mode == "IPs" and line:
                 IPs.append(line)
-            elif mode == "Usernames" and line:
-                Usernames.append(line)
 
 
 Load()
 loop = True
 while loop:
-    print("What do you want to do\n1: Add to Access List\n2: Remove from Access List\n3: Check activity\n4: Save and Exit")
+    print("What do you want to do\n1: Add to Access List\n2: Deny from Access List\n3: Check activity\n4: Save and Exit")
     num = input()
     if num == "1":
         Add()
     elif num == "2":
-        Remove()
+        Deny()
     elif num == "3":
         #report()
         print("Checking")
     elif num == "4":
         Save()
+        SaveDenied()
         loop = False
     else:
         print("Invalid option. Please enter 1, 2, 3, or 4")
