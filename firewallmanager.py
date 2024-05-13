@@ -46,16 +46,16 @@ def Deny():
 def Save():
     with open("ufw.txt", "a") as file:
         for port in Ports:
-            file.write(f"ufw allow {port}\n")
+            file.write(f"sudo ufw allow {port}\n")
         for ip in IPs:
-            file.write(f"ufw allow from {ip}\n")
+            file.write(f"sudo ufw allow from {ip}\n")
 
 def SaveDenied():
     with open("ufw.txt", "a") as file:
         for port in DeniedPorts:
-            file.write(f"ufw deny {port}\n")
+            file.write(f"sudo ufw deny {port}\n")
         for ip in DeniedIPs:
-            file.write(f"ufw deny from {ip}\n")
+            file.write(f"sudo ufw deny from {ip}\n")
 
 def Load():
     global Ports, IPs
