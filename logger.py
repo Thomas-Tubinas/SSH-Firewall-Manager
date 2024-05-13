@@ -53,7 +53,7 @@ def display_results(close_dict, accept_dict, invalid_user_dict):
         print(f"whois {ip}")
 
 def main():
-    file_path = '/var/log/auth.log'
+    file_path = #Replace with path to file
     close_dict, accept_dict, invalid_user_dict = parse_log(file_path)
     display_results(close_dict, accept_dict, invalid_user_dict)
 
