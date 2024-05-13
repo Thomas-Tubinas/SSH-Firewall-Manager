@@ -9,7 +9,7 @@ while True:
     print(current)
 
     if(current == Alarm):
-        with open("/var/log/auth.log", "w") as file:
+        with open("#Replace with path to file", "w") as file:
             file.write('')
         print("Data Wiped")
         break
